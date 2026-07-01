@@ -13,6 +13,8 @@ interface WishlistContextType {
 
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+
 export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { addLog } = useDemo();
   const { isAuthenticated } = useAuth();
@@ -28,7 +30,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
       ...options.headers,
     };
-    const response = await fetch(`http://127.0.0.1:8000/api/wishlist${endpoint}`, {
+    const response = await fetch(`${API_BASE_URL}/wishlist${endpoint}`, {
       ...options,
       headers,
     });

@@ -20,6 +20,8 @@ function adaptOrder(order: any): Order {
   };
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
@@ -56,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/addresses/', {
+      const res = await fetch(`${API_BASE_URL}/addresses/`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
@@ -86,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       try {
-        const res = await fetch('http://127.0.0.1:8000/api/profile/', {
+        const res = await fetch(`${API_BASE_URL}/profile/`, {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
@@ -98,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(userData);
         } else if (res.status === 401 && refreshToken) {
           // Token expired, attempt refresh
-          const refreshRes = await fetch('http://127.0.0.1:8000/api/auth/token/refresh/', {
+          const refreshRes = await fetch(`${API_BASE_URL}/auth/token/refresh/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ refresh: refreshToken })
@@ -112,7 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
             
             // Retry profile fetch
-            const retryRes = await fetch('http://127.0.0.1:8000/api/profile/', {
+            const retryRes = await fetch(`${API_BASE_URL}/profile/`, {
               headers: {
                 'Authorization': `Bearer ${tokenData.access}`,
                 'Content-Type': 'application/json'
@@ -152,7 +154,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!accessToken) return;
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/orders/', {
+      const res = await fetch(`${API_BASE_URL}/orders/`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
@@ -179,7 +181,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/auth/login/', {
+      const res = await fetch(`${API_BASE_URL}/auth/login/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -209,7 +211,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/auth/register/', {
+      const res = await fetch(`${API_BASE_URL}/auth/register/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
@@ -247,7 +249,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (refreshToken && accessToken) {
       try {
-        await fetch('http://127.0.0.1:8000/api/auth/logout/', {
+        await fetch(`${API_BASE_URL}/auth/logout/`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -273,7 +275,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!accessToken) return false;
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/profile/', {
+      const res = await fetch(`${API_BASE_URL}/profile/`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -305,7 +307,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!accessToken) return null;
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/addresses/', {
+      const res = await fetch(`${API_BASE_URL}/addresses/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -336,7 +338,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!accessToken) return false;
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/addresses/${id}/`, {
+      const res = await fetch(`${API_BASE_URL}/addresses/${id}/`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -366,7 +368,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!accessToken) return false;
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/addresses/${id}/`, {
+      const res = await fetch(`${API_BASE_URL}/addresses/${id}/`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -395,7 +397,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!accessToken) return false;
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/addresses/${id}/set-default/`, {
+      const res = await fetch(`${API_BASE_URL}/addresses/${id}/set-default/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -422,7 +424,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const createOrder = async (address: Address, paymentMethod: string): Promise<Order> => {
     const accessToken = localStorage.getItem('freshcart_access_token');
-    const res = await fetch('http://127.0.0.1:8000/api/orders/checkout/', {
+    const res = await fetch(`${API_BASE_URL}/orders/checkout/`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`,

@@ -29,6 +29,8 @@ import Breadcrumbs from '../../components/ui/Breadcrumbs';
 import SafeImage from '../../components/ui/SafeImage';
 import type { Order } from '../../types/user';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+
 export default function OrderSuccess() {
   const location = useLocation();
   const { orders } = useAuth();
@@ -66,7 +68,7 @@ export default function OrderSuccess() {
 
       try {
         const accessToken = localStorage.getItem('freshcart_access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/orders/${orderId}/`, {
+        const res = await fetch(`${API_BASE_URL}/orders/${orderId}/`, {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
@@ -221,7 +223,7 @@ export default function OrderSuccess() {
     try {
       setIsLoading(true);
       const accessToken = localStorage.getItem('freshcart_access_token');
-      const res = await fetch(`http://127.0.0.1:8000/api/orders/${queryId}/`, {
+      const res = await fetch(`${API_BASE_URL}/orders/${queryId}/`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json'

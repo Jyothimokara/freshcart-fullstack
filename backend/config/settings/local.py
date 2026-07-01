@@ -1,8 +1,18 @@
+import dj_database_url
 from .base import *
 
 DB_ENGINE = os.environ.get('DB_ENGINE', 'postgresql').lower()
 
-if DB_ENGINE == 'sqlite':
+if os.environ.get('DATABASE_URL'):
+    # Parse production DATABASE_URL (standard for Render PostgreSQL)
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=os.environ.get('DB_SSL_REQUIRE', 'False').lower() in ('true', '1', 't')
+        )
+    }
+elif DB_ENGINE == 'sqlite':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

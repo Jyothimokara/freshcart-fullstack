@@ -18,6 +18,8 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+
 // Helper function to adapt product properties from backend Decimal strings to frontend numbers
 function adaptProduct(p: any): Product {
   return {
@@ -70,7 +72,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
       ...options.headers,
     };
-    const response = await fetch(`http://127.0.0.1:8000/api/cart${endpoint}`, {
+    const response = await fetch(`${API_BASE_URL}/cart${endpoint}`, {
       ...options,
       headers,
     });
